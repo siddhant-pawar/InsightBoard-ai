@@ -1,0 +1,19 @@
+# Web framework
+fastapi
+uvicorn[standard]
+
+# Database
+SQLAlchemy
+asyncpg
+alembic
+psycopg2-binary
+
+# Pydantic
+pydantic
+pydantic-settings
+
+# AI Integration
+openai
+
+# Utils
+python-dotenv

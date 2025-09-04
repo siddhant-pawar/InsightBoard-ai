@@ -1,0 +1,179 @@
+Task Management API Documentation
+
+Base URL: http://127.0.0.1:8000/api/tasks
+
+
+Transcription API
+
+Endpoint
+
+POST /api/transcripts/
+
+Description
+
+Creates a new transcript record by accepting a raw transcription text (e.g., meeting notes, interviews, or audio-to-text output). Returns the saved transcript with metadata.
+
+Request Headers
+
+Request Body
+{
+  "transcript": "Meeting Title: Project Nova - Pre-Launch Engineering & GTM Alignment\n\nDate: February 14, 2024\nAttendees: Arjun (Product Manager), Elena (Tech Lead), Carlos (Marketing Director), Zoe (QA Manager)\n\nArjun: Thanks for joining, everyone. 
+  We’re officially two weeks out from Nova’s public beta, so this is our final alignment meeting before launch week. I want to surface any critical blockers and make sure Engineering, QA, and Marketing are fully synced. Elena, can you kick us off with the engineering update?
+  Elena: Sure, Arjun. We’ve made solid progress. The real-time collaboration feature is now live on staging. But we’ve hit a serious P1 issue — the document sync engine is throwing state conflicts when three or more users edit the same file within a short time window. 
+  It doesn’t always cause data loss, but it corrupts the edit history. 
+  Obviously, that’s unacceptable for launch.\n\nArjun: That’s a deal-breaker. 
+  What's the root cause?\n\nElena: We suspect it's the operational transform algorithm not properly resolving overlapping changes from multiple client sessions. 
+  I'm refactoring the conflict resolution logic now. Best-case scenario, I can ship a patch by Friday. 
+  After that, I’ll need full QA coverage before we lock anything down.
+  Zoe: We’ll prioritize that, but there’s a catch. Our mobile automation suite hasn’t been running properly on the new iOS 17 simulators — we’re getting random rendering failures in the editor view. 
+  So even if we get the patch, testing will take longer than usual unless we can stabilize the environment.\n\nArjun: Elena, is the mobile rendering issue connected to the sync bug?\n\nElena: No, completely separate. I think it’s a compatibility issue with the custom font rendering on iOS. 
+  It’s minor in the grand scheme, but I can’t promise a fix until after launch. Right now, the real-time sync is the mountain we need to climb.
+  Arjun: Understood. Zoe, can you commit to manual validation for the sync workflows on both desktop and mobile?\n\nZoe: Yes, but I’ll need a freeze by Sunday night at the latest. 
+  Manual tests on five device types will take my team two full days.\n\nElena: Copy that. I’ll aim to get you a clean build by Saturday EOD.\n\nArjun: Great. Carlos, what’s happening on the GTM front? Carlos: We’re 90% ready. 
+  Launch email sequences are written, and the demo video is in post-production. But I need Elena to sign off on the messaging for the real-time editing — particularly around how we describe the conflict resolution. I’d like that feedback by Thursday so I can get final creative approval.\n\nElena: No problem. Send it my way. 
+  I’ll review it after I push the patch.\n\nCarlos: Appreciate it. One more thing — the press deck needs updated screenshots of the collaboration UI with active users editing the same doc. With the current instability, I haven’t been able to capture usable shots.\n\nArjun: Can we prioritize this once the patch is in and staging is stable?
+  Elena: Yes, I’ll coordinate with Carlos early next week. Let’s aim for Tuesday.\n\nCarlos: That works. Also, not urgent, but I’d love to A/B test our onboarding sequence post-launch. I think there's room to improve activation in the first 10 minutes.\n\nArjun: I like that. Can you put together a short brief with test variants and KPIs? 
+  We’ll queue it up for post-launch experimentation.\n\nCarlos: Will do.\n\nZoe: One last thing on my side. Our legacy product, Orion, still has that authentication timeout issue in the admin portal. Support is fielding multiple tickets per week. It's not critical, but it’s not a good look.\n\nArjun: Yeah, we can’t ignore our existing customers. Elena, any chance you can carve out a few hours to at least diagnose it?
+  Elena: I can give it three hours next Wednesday. I won’t be able to fully fix it before Nova ships, but I’ll log everything and propose a path forward.\n\nArjun: That’s all I can ask. Thank you. Alright, to summarize:\n\nThe sync engine bug is the top priority.\n\nStable build by Saturday, full QA starting Sunday.\n\nElena to review marketing copy by Thursday.\n\nPress screenshots by Tuesday.
+  Post-launch: onboarding A/B test and Orion auth investigation.\n\nLet’s stay tight on comms this week. Thanks, everyone. Let’s make this happen."
+}
+
+
+  1. Create Tasks
+
+Endpoint:
+POST /api/tasks/
+
+Description:
+Create one or multiple new tasks.
+
+Request Body:
+
+[
+  {
+    "text": "Review project deadlines",
+    "priority": "high",
+    "tags": ["project management", "deadlines"],
+    "status": "pending",
+    "source_id": "optional-unique-id"
+  },
+  {
+    "text": "Fix payment gateway race condition",
+    "priority": "high",
+    "tags": ["payments", "backend"],
+    "status": "pending"
+  }
+]
+
+
+Response (201 Created):
+
+[
+  {
+    "id": "2b04ad9f-5059-4d8a-afb5-55f3d1f6f704",
+    "text": "Review project deadlines",
+    "priority": "high",
+    "tags": ["project management", "deadlines"],
+    "status": "pending",
+    "created_at": "2025-09-04T14:17:11.397084",
+    "updated_at": "2025-09-04T14:17:11.397084"
+  }
+]
+
+  2. List All Tasks
+
+Endpoint:
+GET /api/tasks/
+
+Description:
+Retrieve all tasks.
+
+Response (200 OK):
+
+[
+  {
+    "id": "41a35128-19aa-4fcd-9ba8-493f97314458",
+    "text": "Fix payment gateway race condition",
+    "priority": "high",
+    "tags": ["payments", "backend"],
+    "status": "pending",
+    "created_at": "2025-09-04T15:04:35.786162",
+    "updated_at": "2025-09-04T15:04:35.786162"
+  }
+]
+
+  3. Update Task
+
+Endpoint:
+PATCH /api/tasks/{task_id}
+
+Description:
+Update fields of an existing task.
+
+Request Body:
+
+{
+  "priority": "medium",
+  "status": "completed"
+}
+
+
+Response (200 OK):
+
+{
+  "id": "41a35128-19aa-4fcd-9ba8-493f97314458",
+  "text": "Fix payment gateway race condition",
+  "priority": "medium",
+  "tags": ["payments", "backend"],
+  "status": "completed",
+  "created_at": "2025-09-04T15:04:35.786162",
+  "updated_at": "2025-09-04T16:10:12.432981"
+}
+
+  4. Delete Task
+
+Endpoint:
+DELETE /api/tasks/{task_id}
+
+Description:
+Delete a task by ID.
+
+Response (200 OK):
+
+true
+
+  5. Filter Tasks
+
+Endpoint:
+POST /api/tasks/filter
+
+Description:
+Filter and sort tasks by status, priority, keyword (search inside text), tags, and order.
+
+Request Body Example:
+
+{
+  "status": "pending",
+  "priority": "medium",
+  "keyword": "memory leak",
+  "tags": ["legacy", "bug"],
+  "sort_by": "created_at",
+  "order": "desc"
+}
+
+
+Response (200 OK):
+
+[
+  {
+    "id": "6577a9b5-977e-472c-97a5-6bbbf62f4525",
+    "text": "Investigate memory leak issue in the Titan reporting service",
+    "priority": "medium",
+    "tags": ["legacy", "bug"],
+    "status": "pending",
+    "created_at": "2025-09-04T15:04:35.786162",
+    "updated_at": "2025-09-04T15:04:35.786162"
+  }
+]
+
+run the app uvicorn app.main:app --reload
