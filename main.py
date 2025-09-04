@@ -9,7 +9,7 @@ from app.api import transcripts, tasks
 app = FastAPI(title="InsightBoard AI API")
 
 # Configure CORS
-origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000").split(",")
+origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000","https://insightboard-aifrontend-production.up.railway.app").split(",")
 
 app.add_middleware(
     CORSMiddleware,
