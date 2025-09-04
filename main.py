@@ -1,4 +1,3 @@
-# app/main.py
 import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -9,11 +8,14 @@ from app.api import transcripts, tasks
 app = FastAPI(title="InsightBoard AI API")
 
 # Configure CORS
-origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000","https://insightboard-aifrontend-production.up.railway.app").split(",")
+origins = os.getenv(
+    "ALLOWED_ORIGINS",
+    "http://localhost:3000,https://insightboard-aifrontend-production.up.railway.app"
+).split(",")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,  # Restrict in production using environment variable
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
